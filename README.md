@@ -4,7 +4,7 @@
 
 It supports a Rich live table for active viewing and a compact cache-backed status line for tmux.
 
-![ticker-watch tmux marquee demo](assets/ticker-watch-tmux.gif)
+![ticker-watch tmux marquee demo](assets/ticker-watch-tmux-demo.gif)
 
 ## Install
 
