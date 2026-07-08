@@ -6,6 +6,8 @@ It supports a Rich live table for active viewing and a compact cache-backed stat
 
 ![ticker-watch tmux marquee demo](assets/ticker-watch-tmux-demo.gif)
 
+Default tmux marquee demo with `NVDA`, `BTC`, and `0700.HK`.
+
 ## Install
 
 ```bash
