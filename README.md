@@ -4,7 +4,7 @@
 
 It supports a Rich live table for active viewing and a compact cache-backed status line for tmux.
 
-![ticker-watch tmux marquee demo](docs/assets/ticker-watch-tmux.gif)
+![ticker-watch tmux marquee demo](assets/ticker-watch-tmux.gif)
 
 ## Install
 
@@ -56,12 +56,6 @@ If tmux does not show prices, use the absolute path because the tmux server may 
 ```bash
 set -g status-right "#(/opt/homebrew/bin/ticker-watch status --compact --marquee --marquee-width 90)"
 set -g status-right-length 200
-```
-
-The README GIF is generated with:
-
-```bash
-docs/record_demo.sh
 ```
 
 ## Config
