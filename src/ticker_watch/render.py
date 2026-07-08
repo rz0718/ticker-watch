@@ -12,12 +12,25 @@ def render_compact_status(
     max_symbols: int | None = None,
     now: datetime | None = None,
     show_stale: bool = True,
+    rotate: bool = False,
+    rotate_seconds: int = 5,
+    marquee: bool = False,
+    marquee_width: int = 90,
+    marquee_step: int = 1,
 ) -> str:
-    quotes = cache.quotes[:max_symbols] if max_symbols else cache.quotes
+    quotes = _select_compact_quotes(
+        cache.quotes,
+        max_symbols=max_symbols,
+        rotate=rotate,
+        rotate_seconds=rotate_seconds,
+        now=now,
+    )
     parts = [_render_compact_quote(quote) for quote in quotes]
     status = " | ".join(parts)
     if show_stale and is_stale(cache, now=now):
-        return f"STALE {status}"
+        status = f"STALE {status}"
+    if marquee:
+        return _render_marquee(status, width=marquee_width, step=marquee_step, now=now)
     return status
 
 
@@ -53,6 +66,38 @@ def render_quotes_table(cache: QuoteCache) -> Table:
             style=style,
         )
     return table
+
+
+def _select_compact_quotes(
+    quotes: list[Quote],
+    *,
+    max_symbols: int | None,
+    rotate: bool,
+    rotate_seconds: int,
+    now: datetime | None,
+) -> list[Quote]:
+    if max_symbols is None or max_symbols >= len(quotes):
+        return quotes
+    if not rotate:
+        return quotes[:max_symbols]
+
+    bucket_seconds = max(1, rotate_seconds)
+    rotation_now = now or datetime.now().astimezone()
+    start = int(rotation_now.timestamp() // bucket_seconds) % len(quotes)
+    return [quotes[(start + index) % len(quotes)] for index in range(max_symbols)]
+
+
+def _render_marquee(status: str, *, width: int, step: int, now: datetime | None) -> str:
+    if not status:
+        return ""
+
+    resolved_width = max(1, width)
+    resolved_step = max(1, step)
+    marquee_now = now or datetime.now().astimezone()
+    tape = f"{status}   "
+    offset = (int(marquee_now.timestamp()) * resolved_step) % len(tape)
+    repeat_count = ((resolved_width + offset) // len(tape)) + 2
+    return (tape * repeat_count)[offset : offset + resolved_width]
 
 
 def _render_compact_quote(quote: Quote) -> str:

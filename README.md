@@ -42,11 +42,19 @@ ticker-watch daemon status
 Add this to `~/.tmux.conf`:
 
 ```bash
-set -g status-right "#(ticker-watch status --compact)"
-set -g status-interval 15
+set -g status-right "#(ticker-watch status --compact --marquee --marquee-width 90)"
+set -g status-right-length 200
+set -g status-interval 1
 ```
 
 The status command reads `~/.cache/ticker-watch/latest.json`; it does not fetch from Yahoo directly.
+
+If tmux does not show prices, use the absolute path because the tmux server may not share your shell PATH:
+
+```bash
+set -g status-right "#(/opt/homebrew/bin/ticker-watch status --compact --marquee --marquee-width 90)"
+set -g status-right-length 200
+```
 
 ## Config
 

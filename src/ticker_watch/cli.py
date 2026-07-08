@@ -96,6 +96,26 @@ def status_command(
         bool,
         typer.Option("--show-stale", help="Show stale cache indicator when cache is old."),
     ] = False,
+    rotate: Annotated[
+        bool,
+        typer.Option("--rotate", help="Rotate the visible symbol window when --max-symbols is set."),
+    ] = False,
+    rotate_seconds: Annotated[
+        int,
+        typer.Option("--rotate-seconds", min=1, help="Seconds before rotating to the next symbol window."),
+    ] = 5,
+    marquee: Annotated[
+        bool,
+        typer.Option("--marquee", help="Scroll the compact status from right to left."),
+    ] = False,
+    marquee_width: Annotated[
+        int,
+        typer.Option("--marquee-width", min=1, help="Fixed width for --marquee output."),
+    ] = 90,
+    marquee_step: Annotated[
+        int,
+        typer.Option("--marquee-step", min=1, help="Characters to move per second in --marquee mode."),
+    ] = 1,
 ) -> None:
     _ = compact
     _ = show_stale
@@ -104,7 +124,18 @@ def status_command(
     except CacheNotFoundError:
         console.print("ticker-watch: no cache yet, run `ticker-watch daemon start` or `ticker-watch once`")
         return
-    console.print(render_compact_status(cache, max_symbols=max_symbols, show_stale=True))
+    typer.echo(
+        render_compact_status(
+            cache,
+            max_symbols=max_symbols,
+            show_stale=True,
+            rotate=rotate,
+            rotate_seconds=rotate_seconds,
+            marquee=marquee,
+            marquee_width=marquee_width,
+            marquee_step=marquee_step,
+        )
+    )
 
 
 @daemon_app.command("run")

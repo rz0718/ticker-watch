@@ -72,6 +72,85 @@ def test_compact_status_limits_symbols() -> None:
     assert rendered == "SOXL 71.20 ▲2.1%"
 
 
+def test_compact_status_rotates_limited_symbols() -> None:
+    rendered = render_compact_status(
+        cache(
+            [
+                quote("SOXL", 71.2, 2.09),
+                quote("SNDK", 68.55, 0.6),
+                quote("BTC-USD", 108240.0, -0.4, type_="crypto"),
+                quote("0700.HK", 388.4, 0.8),
+            ]
+        ),
+        max_symbols=2,
+        now=datetime(1970, 1, 1, 0, 0, 10, tzinfo=timezone.utc),
+        show_stale=False,
+        rotate=True,
+        rotate_seconds=5,
+    )
+
+    assert rendered == "BTC 108,240 ▼0.4% | 0700.HK 388.40 ▲0.8%"
+
+
+def test_compact_status_rotation_wraps_to_first_symbol() -> None:
+    rendered = render_compact_status(
+        cache(
+            [
+                quote("SOXL", 71.2, 2.09),
+                quote("SNDK", 68.55, 0.6),
+                quote("BTC-USD", 108240.0, -0.4, type_="crypto"),
+                quote("0700.HK", 388.4, 0.8),
+            ]
+        ),
+        max_symbols=2,
+        now=datetime(1970, 1, 1, 0, 0, 15, tzinfo=timezone.utc),
+        show_stale=False,
+        rotate=True,
+        rotate_seconds=5,
+    )
+
+    assert rendered == "0700.HK 388.40 ▲0.8% | SOXL 71.20 ▲2.1%"
+
+
+def test_compact_status_marquee_returns_fixed_width_slice() -> None:
+    rendered = render_compact_status(
+        cache([quote("SOXL", 71.2, 2.09), quote("SNDK", 68.55, 0.6)]),
+        now=datetime(1970, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+        show_stale=False,
+        marquee=True,
+        marquee_width=24,
+    )
+
+    assert rendered == "SOXL 71.20 ▲2.1% | SNDK "
+    assert len(rendered) == 24
+
+
+def test_compact_status_marquee_moves_left_over_time() -> None:
+    rendered = render_compact_status(
+        cache([quote("SOXL", 71.2, 2.09), quote("SNDK", 68.55, 0.6)]),
+        now=datetime(1970, 1, 1, 0, 0, 2, tzinfo=timezone.utc),
+        show_stale=False,
+        marquee=True,
+        marquee_width=24,
+    )
+
+    assert rendered == "XL 71.20 ▲2.1% | SNDK 68"
+    assert len(rendered) == 24
+
+
+def test_compact_status_marquee_wraps_to_start() -> None:
+    rendered = render_compact_status(
+        cache([quote("SOXL", 71.2, 2.09)]),
+        now=datetime(1970, 1, 1, 0, 0, 19, tzinfo=timezone.utc),
+        show_stale=False,
+        marquee=True,
+        marquee_width=16,
+    )
+
+    assert rendered == "SOXL 71.20 ▲2.1%"
+    assert len(rendered) == 16
+
+
 def test_full_table_render_does_not_crash_on_missing_data() -> None:
     table = render_quotes_table(
         cache(

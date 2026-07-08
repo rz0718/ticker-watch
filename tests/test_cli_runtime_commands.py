@@ -44,6 +44,30 @@ def sample_cache() -> QuoteCache:
     )
 
 
+def sample_long_cache() -> QuoteCache:
+    now = datetime(2026, 7, 8, 10, 0, tzinfo=timezone.utc)
+    return QuoteCache(
+        updated_at=now,
+        refresh_seconds=60,
+        source="yfinance",
+        quotes=[
+            Quote(
+                symbol=f"LONG{i}",
+                name=f"LONG{i}",
+                type="us",
+                currency="USD",
+                price=100 + i,
+                previous_close=99,
+                change=1 + i,
+                change_percent=1.23,
+                market_state="OPEN",
+                updated_at=now,
+            )
+            for i in range(12)
+        ],
+    )
+
+
 def test_status_reads_cache_without_fetching(runner: CliRunner, isolated_paths) -> None:
     write_cache(sample_cache())
 
@@ -51,6 +75,43 @@ def test_status_reads_cache_without_fetching(runner: CliRunner, isolated_paths) 
 
     assert result.exit_code == 0
     assert result.output.strip() == "SOXL 71.20 ▲2.1%"
+
+
+def test_status_outputs_single_line_for_tmux(runner: CliRunner, isolated_paths) -> None:
+    write_cache(sample_long_cache())
+
+    result = runner.invoke(app, ["status", "--compact"])
+
+    assert result.exit_code == 0
+    assert result.output.count("\n") == 1
+    assert "LONG0 100.00 ▲1.2%" in result.output
+    assert "LONG11 111.00 ▲1.2%" in result.output
+
+
+def test_status_accepts_rotate_for_tmux(runner: CliRunner, isolated_paths) -> None:
+    write_cache(sample_long_cache())
+
+    result = runner.invoke(
+        app,
+        ["status", "--compact", "--max-symbols", "3", "--rotate", "--rotate-seconds", "5"],
+    )
+
+    assert result.exit_code == 0
+    assert result.output.count("\n") == 1
+    assert result.output.count("|") == 2
+
+
+def test_status_accepts_marquee_for_tmux(runner: CliRunner, isolated_paths) -> None:
+    write_cache(sample_long_cache())
+
+    result = runner.invoke(
+        app,
+        ["status", "--compact", "--marquee", "--marquee-width", "30", "--marquee-step", "1"],
+    )
+
+    assert result.exit_code == 0
+    assert result.output.count("\n") == 1
+    assert len(result.output.rstrip("\n")) == 30
 
 
 def test_status_reports_missing_cache(runner: CliRunner, isolated_paths) -> None:
