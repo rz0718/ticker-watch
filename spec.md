@@ -139,13 +139,9 @@ refresh_seconds: 60
 provider: yahoo
 
 watchlist:
-  - symbol: SOXL
+  - symbol: NVDA
     type: us
-    name: SOXL
-
-  - symbol: SNDK
-    type: us
-    name: SanDisk
+    name: NVIDIA
 
   - symbol: BTC-USD
     type: crypto
@@ -712,13 +708,13 @@ Required tests:
 
 ```text
 1. Config load/save works.
-2. Default config contains SOXL, SNDK, BTC-USD, 0700.HK.
+2. Default config contains NVDA, BTC-USD, 0700.HK.
 3. Add symbol works.
 4. Remove symbol works.
 5. Type inference works:
    - BTC-USD -> crypto
    - 0700.HK -> hk
-   - SOXL -> us
+   - NVDA -> us
 6. Cache write/read works.
 7. Cache stale detection works.
 8. Compact status output renders positive, negative, zero, and error quotes.
@@ -804,12 +800,9 @@ refresh_seconds: 60
 provider: yahoo
 
 watchlist:
-  - symbol: SOXL
+  - symbol: NVDA
     type: us
-    name: SOXL
-  - symbol: SNDK
-    type: us
-    name: SanDisk
+    name: NVIDIA
   - symbol: BTC-USD
     type: crypto
     name: Bitcoin
@@ -954,7 +947,7 @@ Acceptance:
 ticker-watch once
 ```
 
-prints a table for SOXL, SNDK, BTC-USD, and 0700.HK.
+prints a table for NVDA, BTC-USD, and 0700.HK.
 
 ### Milestone 4: Cache and status
 

@@ -47,7 +47,7 @@ def test_daemon_loop_writes_latest_cache(isolated_paths) -> None:
 
     cache = read_cache()
     assert isinstance(cache, QuoteCache)
-    assert [item.symbol for item in cache.quotes] == ["SOXL", "SNDK", "BTC-USD", "0700.HK"]
+    assert [item.symbol for item in cache.quotes] == ["NVDA", "BTC-USD", "0700.HK"]
 
 
 def test_daemon_loop_writes_error_rows_when_provider_raises(isolated_paths) -> None:
@@ -62,7 +62,7 @@ def test_daemon_loop_writes_error_rows_when_provider_raises(isolated_paths) -> N
     run_daemon_loop(provider=RaisingProvider(), iterations=1, sleep_fn=lambda seconds: None)
 
     cache = read_cache()
-    assert len(cache.quotes) == 4
+    assert len(cache.quotes) == 3
     assert all(item.error == "provider failed" for item in cache.quotes)
     assert all(item.market_state == "ERROR" for item in cache.quotes)
 

@@ -22,7 +22,7 @@ ticker-watch daemon start
 ticker-watch status
 ```
 
-Default symbols are `SOXL`, `SNDK`, `BTC-USD`, and `0700.HK`.
+Default symbols are `NVDA`, `BTC`, and `0700.HK`.
 
 ## Commands
 
@@ -66,12 +66,9 @@ set -g status-right-length 200
 refresh_seconds: 60
 provider: yahoo
 watchlist:
-  - symbol: SOXL
+  - symbol: NVDA
     type: us
-    name: SOXL
-  - symbol: SNDK
-    type: us
-    name: SanDisk
+    name: NVIDIA
   - symbol: BTC-USD
     type: crypto
     name: Bitcoin
@@ -98,7 +95,7 @@ When `--type` is omitted, `*-USD` is treated as crypto, `*.HK` as Hong Kong, and
 `ticker-watch status` prints one compact line:
 
 ```text
-SOXL 71.20 ▲2.1% | BTC 108,240 ▼0.4% | SNDK 68.55 ▲0.6%
+NVDA 145.20 ▲1.1% | BTC 108,240 ▼0.4% | 0700.HK 388.40 ▲0.8%
 ```
 
 If the cache is missing, it prints a short message telling you to run `ticker-watch daemon start` or `ticker-watch once`. If the cache is stale, the line starts with `STALE`.

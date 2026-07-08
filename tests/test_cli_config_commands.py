@@ -25,7 +25,7 @@ def test_init_and_list_commands(runner: CliRunner, isolated_paths) -> None:
 
     list_result = runner.invoke(app, ["list"])
     assert list_result.exit_code == 0
-    assert "SOXL" in list_result.output
+    assert "NVDA" in list_result.output
     assert "BTC-USD" in list_result.output
 
 

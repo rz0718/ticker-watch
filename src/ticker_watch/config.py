@@ -30,8 +30,7 @@ def default_config() -> AppConfig:
         refresh_seconds=60,
         provider="yahoo",
         watchlist=[
-            InstrumentConfig(symbol="SOXL", type="us", name="SOXL"),
-            InstrumentConfig(symbol="SNDK", type="us", name="SanDisk"),
+            InstrumentConfig(symbol="NVDA", type="us", name="NVIDIA"),
             InstrumentConfig(symbol="BTC-USD", type="crypto", name="Bitcoin"),
             InstrumentConfig(symbol="0700.HK", type="hk", name="Tencent"),
         ],

@@ -27,8 +27,7 @@ def test_default_config_contains_required_symbols(isolated_config) -> None:
     config = default_config()
 
     assert [item.symbol for item in config.watchlist] == [
-        "SOXL",
-        "SNDK",
+        "NVDA",
         "BTC-USD",
         "0700.HK",
     ]
@@ -79,8 +78,7 @@ def test_init_config_force_overwrites(isolated_config) -> None:
     assert path == config_file_path()
     assert created is True
     assert [item.symbol for item in load_config().watchlist] == [
-        "SOXL",
-        "SNDK",
+        "NVDA",
         "BTC-USD",
         "0700.HK",
     ]
@@ -92,7 +90,7 @@ def test_init_config_force_overwrites(isolated_config) -> None:
         ("BTC-USD", "crypto"),
         ("ETH-USD", "crypto"),
         ("0700.HK", "hk"),
-        ("SOXL", "us"),
+        ("NVDA", "us"),
     ],
 )
 def test_infer_instrument_type(symbol: str, expected: str) -> None:
